@@ -1,0 +1,27 @@
+{
+    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.6/bin/python3",
+    "editor.formatOnSave": true,
+    "python.linting.pycodestyleEnabled": false,
+    "python.linting.pylintPath": "pylint",
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_django"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.venvPath": "${workspaceFolder}/.env/bin/python3",
+    "python.linting.pycodestyleArgs": [
+        "--ignore=E501"
+    ],
+    "files.exclude": {
+        "**/*.pyc": true
+    },
+    "[python]": {
+        "editor.formatOnSave": true
+    },
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#2b4afa",
+        "titleBar.inactiveBackground": "#2b4afa"
+    },
+    "python.linting.enabled": true,
+    "python.formatting.provider": "yapf"
+}

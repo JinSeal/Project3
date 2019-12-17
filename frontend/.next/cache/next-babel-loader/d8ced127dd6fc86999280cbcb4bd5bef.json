@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var endpoint = \"http://localhost:1111\";","map":{"version":3,"sources":["/Users/jinz/Projects/project3/frontend/config.js"],"names":["endpoint"],"mappings":"AAAA,OAAO,IAAMA,QAAQ,0BAAd","sourcesContent":["export const endpoint = `http://localhost:1111`;\n"]},"metadata":{},"sourceType":"module"}
