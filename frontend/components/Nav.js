@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import { Mutation } from 'react-apollo';
+
 import Signout from './Signout';
+
 import styled from 'styled-components';
+
 
 const NavStyles = styled.ul`
   margin: 0;
@@ -52,14 +54,10 @@ const NavStyles = styled.ul`
   }
 `;
 
-const Nav = () => (
+
+const Nav = (props) => (
   <NavStyles>
-    <Link href="/aboutus">
-      <a>About Us</a>
-    </Link>
-    <Link href="/cats">
-      <a>Meet the Cats</a>
-    </Link>
+    <a onClick={() => props.openDrawer()}>Meet the Cats</a>
     <Link href="/donation">
       <a>Donation</a>
     </Link>

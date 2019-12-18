@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import date, datetime
+from django.conf import settings
+
 
 
 class Cat(models.Model):
@@ -20,13 +22,14 @@ class Cat(models.Model):
         (LEAST_CONCERN, 'Least concern'),
     ]
 
+
     name = models.CharField(max_length=100)
     description = models.TextField()
     habitat = models.TextField()
     iucn_status = models.IntegerField(
         choices=IUCN_RED_LIST_STATUS,
     )
-    date_back = models.TextField()
+    number = models.TextField()
     subspecies = models.IntegerField()
     life_span = models.TextField()
     size = models.TextField()
@@ -36,13 +39,12 @@ class Cat(models.Model):
     bg = models.URLField()
     bg2 = models.URLField()
 
-
     def __str__(self):
         return self.name
 
     class Meta:
         ordering = ('iucn_status',)
-
+    
 
 class Photo(models.Model):
     title = models.CharField(max_length=100)
@@ -68,24 +70,12 @@ class Article(models.Model):
     class Meta:
         ordering = ('title',)
 
-class User(models.Model):
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=100)
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-
-
-    def __str__(self):
-        return self.email + " " + self.name
-
-    class Meta:
-        ordering = ('name',)
-
 
 class Donation(models.Model):
     amount = models.FloatField()
     date = models.DateField(default=date.today, blank=True)
     email = models.EmailField()
+    stripetoken = models.TextField()
     cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat")
 
     def __str__(self):
@@ -96,7 +86,7 @@ class Donation(models.Model):
 
 class Adoption(models.Model): 
     cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = "User")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return "User: {user_id}, Cat: {cat_id}".format(user_id=self.user_id, cat_id=self.cat_id)
@@ -120,7 +110,7 @@ class Item(models.Model):
 class CartItem(models.Model): 
     quantity = models.IntegerField(default=1)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name = "Item")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = "User")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return "item_" + self.item_id
@@ -130,7 +120,7 @@ class CartItem(models.Model):
 class OrderItem(models.Model):
     quantity = models.IntegerField(default=1)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name = "Item")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = "User")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return "item_" + self.item_id
@@ -141,7 +131,7 @@ class Order(models.Model):
     total = models.IntegerField()
     datetime = models.DateTimeField(default=datetime.now, blank=True)
     charge = models.CharField(max_length=100)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = "User")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
     def __str__(self):

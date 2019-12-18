@@ -23,5 +23,4 @@
         "titleBar.inactiveBackground": "#2b4afa"
     },
     "python.linting.enabled": true,
-    "python.formatting.provider": "yapf"
 }

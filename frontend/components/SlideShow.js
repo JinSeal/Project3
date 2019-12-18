@@ -41,22 +41,11 @@ const SlideShow = () => {
     return (
         <Container>
             <Fade {...fadeProperties}>
-                <div>
-                    <img src={fadeImages[0]} />
-                </div>
-                <div>
-                    <img src={fadeImages[1]} />
-                </div>
-                <div>
-                    <img src={fadeImages[2]} />
-                </div>
-                <div>
-                    <img src={fadeImages[3]} />
-                </div>
-                <div>
-                    <img src={fadeImages[4]} />
-                </div>
-
+                {fadeImages.map(img => (
+                    <div>
+                        <img src={img} />
+                    </div>
+                ))}
             </Fade>
         </Container >
     )

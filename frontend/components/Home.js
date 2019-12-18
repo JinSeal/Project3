@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import React, { Component, useState } from 'react';
+
 import styled from 'styled-components';
 import SlideShow from './SlideShow';
 import DonationForm from './DonationForm';
-import { Button, TextInput, Autocomplete } from 'evergreen-ui'
+import { Button, TextInput, Autocomplete, SideSheet, Pane, Heading } from 'evergreen-ui'
+
 
 
 const Center = styled.div`
@@ -27,11 +27,15 @@ class Home extends Component {
 
 const ParagraphStyles = styled.div`
   display: grid;
-  grid-template-columns: 300px auto;
+  grid-template-columns: 30% auto;
   grid-column-gap: 5rem;
   padding: 10rem 20rem;
   background: ${props => props.theme.lightgrey};
   color: ${props => props.theme.black};
+
+  @media (max-width: 1300px) {
+    padding: 3rem 10rem;
+  }
 
   div{
     text-align: left;
@@ -72,47 +76,73 @@ const DonationStyles = styled.div`
 
 `;
 
-const Donation = () => (
-  <>
-    <DonationStyles>
-      <form style={{ textAlign: "left", paddingLeft: "2rem" }}>
-        <Autocomplete height={50}
-          onChange={changedItem => console.log(changedItem)}
-          items={['$25', '$50', '$100', '$200', '$500']}
-        >
-          {(props) => {
-            const { getInputProps, getRef, inputValue, openMenu } = props
-            return (
-              <div >
-                <h1>Donate</h1>
-                <TextInput
-                  placeholder="Choose or Enter an Amount"
-                  value={inputValue}
-                  innerRef={getRef}
-                  {...getInputProps({
-                    onFocus: () => {
-                      openMenu()
-                    }
-                  })}
-                />
-                <h1>
-                  to save the world's wild cats.
+const Donation = () => {
+  const [isShown, setIsShown] = useState(false)
+  const [amount, setAmount] = useState(0)
+
+  return (
+    <>
+      <DonationStyles>
+        <form style={{ textAlign: "left", paddingLeft: "2rem" }}>
+          <Autocomplete height={50}
+            onChange={changedItem => setAmount(changedItem)}
+            items={[25, 50, 100, 200, 500]}
+          >
+            {(props) => {
+              const { getInputProps, getRef, inputValue, openMenu } = props
+              return (
+                <div >
+                  <h1>Donate</h1>
+                  <TextInput
+                    placeholder="Choose or Enter an Amount"
+                    value={inputValue}
+                    innerRef={getRef}
+                    {...getInputProps({
+                      onFocus: () => {
+                        openMenu()
+                      }
+                    })}
+                  />
+                  <h1>
+                    to save the world's wild cats.
               </h1>
-              </div>
-            )
-          }}
-        </Autocomplete>
-        <Button height={50} marginRight={16} appearance="primary" intent="success" iconBefore="heart">
-          Donate!
+                </div>
+              )
+            }}
+          </Autocomplete>
+          <Button height={50} marginRight={16} appearance="primary" intent="success" iconBefore="heart" onClick={e => {
+            e.preventDefault();
+            setIsShown(true);
+          }}>
+            Donate!
         </Button>
-      </form>
-    </DonationStyles>
-    <DonationForm>
+        </form>
+      </DonationStyles>
+      <SideSheet
+        isShown={isShown}
+        onCloseComplete={() => setIsShown(false)}
+        containerProps={{
+          display: 'flex',
+          flex: '1',
+          flexDirection: 'column',
+        }}
+      >
+        <Pane zIndex={1} flexShrink={0} elevation={0} backgroundColor="white">
+          <Pane padding={16}>
+            <Heading size={600}>Donation</Heading>
+          </Pane>
 
-    </DonationForm>
+        </Pane>
 
-  </>
-)
+        <Pane flex="1" overflowY="scroll" background="tint1" padding={16}>
+          <img style={{ width: "100%", margin: "0 auto" }} src="/static/image/cubs.jpeg" />
+          <DonationForm amount={amount} />
+        </Pane>
+
+      </SideSheet>
+    </>
+  )
+}
 
 const NewsCenterStyles = styled.div`
 
@@ -134,8 +164,7 @@ const NewsCenterStyles = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 5rem;
   }
-  
-  
+
 
   img{
     width: 100%;

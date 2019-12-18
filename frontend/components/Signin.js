@@ -6,18 +6,16 @@ import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 
 const SIGNIN_MUTATION = gql`
-  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
-    signin(email: $email, password: $password) {
-      id
-      email
-      name
+  mutation SIGNIN_MUTATION($username: String!, $password: String!) {
+    tokenAuth(username: $username, password: $password) {
+      token
     }
   }
 `;
 
 class Signin extends Component {
   state = {
-    name: '',
+    username: '',
     password: '',
     email: '',
   };
@@ -31,25 +29,25 @@ class Signin extends Component {
         variables={this.state}
         refetchQueries={[{ query: CURRENT_USER_QUERY }]}
       >
-        {(signup, { error, loading }) => (
+        {(tokenAuth, { error, loading }) => (
           <Form
             method="post"
             onSubmit={async e => {
               e.preventDefault();
-              await signup();
-              this.setState({ name: '', email: '', password: '' });
+              await tokenAuth();
+              this.setState({ username: '', email: '', password: '' });
             }}
           >
             <fieldset disabled={loading} aria-busy={loading}>
               <h2>Sign into your account</h2>
               <Error error={error} />
-              <label htmlFor="email">
-                Email
+              <label htmlFor="username">
+                Username
                 <input
-                  type="email"
-                  name="email"
-                  placeholder="email"
-                  value={this.state.email}
+                  type="username"
+                  name="username"
+                  placeholder="username"
+                  value={this.state.username}
                   onChange={this.saveToState}
                 />
               </label>

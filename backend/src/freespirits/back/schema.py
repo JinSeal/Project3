@@ -1,7 +1,7 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-
-from freespirits.back.models import Cat, Photo, Article, User, Donation, Adoption, Item, CartItem, OrderItem, Order
+from django.contrib.auth import get_user_model
+from freespirits.back.models import Cat, Photo, Article, Donation, Adoption, Item, CartItem, OrderItem, Order
 
 class CatType(DjangoObjectType):
     class Meta:
@@ -12,9 +12,6 @@ class PhotoType(DjangoObjectType):
 class ArticleType(DjangoObjectType):
     class Meta:
         model = Article
-class UserType(DjangoObjectType):
-    class Meta:
-        model = User
 class DonationType(DjangoObjectType):
     class Meta:
         model = Donation
@@ -33,18 +30,78 @@ class OrderItemType(DjangoObjectType):
 class OrderType(DjangoObjectType):
     class Meta:
         model = Order
+class UserType(DjangoObjectType):
+    class Meta:
+        model = get_user_model()
 
 
+class Query(graphene.ObjectType):
+    all_cats = graphene.List(CatType)
+    all_photos = graphene.List(PhotoType)
+    me = graphene.Field(UserType)
 
+    cat = graphene.Field(CatType, id=graphene.Int(), name=graphene.String())
 
-
-class Query(object):
-    all_cat = graphene.List(CatType)
-    all_photo = graphene.List(PhotoType)
-
-    def resolve_all_cat(self, info, **kwargs):
+    def resolve_all_cats(self, info, **kwargs):
         return Cat.objects.all()
 
-    def resolve_all_photo(self, info, **kwargs):
-        # We can easily optimize query count in the resolve method
-        return Photo.objects.select_related('cat').all()
+    def resolve_cat(self, info, **kwargs):
+          id = kwargs.get('id')
+          name = kwargs.get('name')
+
+          if id is not None:
+              return Cat.objects.get(pk=id)
+
+          if name is not None:
+              return Cat.objects.get(name=name)
+
+          return None
+
+    def resolve_me(self, info):
+        user = info.context.user
+        if user.is_anonymous:
+            raise Exception('Not logged in!')
+
+        return user
+
+
+
+
+
+class CreateUser(graphene.Mutation):
+    user = graphene.Field(UserType)
+
+    class Arguments:
+        username = graphene.String(required=True)
+        password = graphene.String(required=True)
+        email = graphene.String(required=True)
+
+    def mutate(self, info, username, password, email):
+        user = get_user_model()(
+            username=username,
+            email=email,
+        )
+        user.set_password(password)
+        user.save()
+
+        return CreateUser(user=user)
+
+class Mutation(graphene.ObjectType):
+    create_user = CreateUser.Field()
+
+
+    
+# # Set your secret key: remember to change this to your live secret key in production
+# # See your keys here: https://dashboard.stripe.com/account/apikeys
+# stripe.api_key = 'sk_test_NyaCo4VX3cDyY5TBu9WA2ZhW00SAssAE9N'
+
+# # Token is created using Stripe Checkout or Elements!
+# # Get the payment token ID submitted by the form:
+# token = request.form['stripeToken'] # Using Flask
+
+# charge = stripe.Charge.create(
+#     amount=999,
+#     currency='aud',
+#     description='Example charge',
+#     source=token,
+# )
