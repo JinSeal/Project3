@@ -1,9 +1,5 @@
-import Link from 'next/link';
 import User from './User';
 import PleaseSignIn from './PleaseSignIn';
-import styled from 'styled-components';
-
-
 
 
 const Account = (props) => (
@@ -15,12 +11,7 @@ const Account = (props) => (
                 <div>
                     {me && (
                         <>
-                            <Link href="/adoption">
-                                <a>Account</a>
-                            </Link>
-                            <Link href="/account">
-                                <a>Account</a>
-                            </Link>
+                            <h1>coming soon</h1>
                         </>
                     )}
                     {!me && (

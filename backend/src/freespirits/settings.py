@@ -166,3 +166,6 @@ CORS_ALLOW_CREDENTIALS = True
 STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "pk_test_KiZyYKiQtlmrqhtoGEbkdtuR00es4lCEgx")
 STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "sk_test_NyaCo4VX3cDyY5TBu9WA2ZhW00SAssAE9N")
 STRIPE_LIVE_MODE = False
+
+import django_heroku
+django_heroku.settings(locals())

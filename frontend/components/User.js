@@ -13,6 +13,7 @@ const CURRENT_USER_QUERY = gql`
         catId{
           name
           image
+          description
         }
       }
       cartitemSet{

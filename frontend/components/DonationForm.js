@@ -45,7 +45,6 @@ class DonationForm extends Component {
         allocation: ""
     };
 
-
     saveToState = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
@@ -73,7 +72,6 @@ class DonationForm extends Component {
                     const catsName = _.pluck(data.allCats, "name")
                     let cat = _.where(data.allCats, { name: this.state.allocation })[0]
                     let image = cat ? cat.image : "static/image/stripe.jpg"
-
                     return (
                         <Styles>
                             <FormField>
@@ -90,7 +88,7 @@ class DonationForm extends Component {
                                     height={50}
                                     items={[25.00, 50.00, 100.00, 200.00, 500.00]}
                                     onChange={changedItem => this.setState({ gift: changedItem })}
-                                    defaultInputValue={this.state.gift}
+                                    initialInputValue={this.state.gift}
                                 >
 
                                     {(props) => {
@@ -157,3 +155,4 @@ class DonationForm extends Component {
 }
 
 export default DonationForm;
+export { ALL_CATS_QUERY }

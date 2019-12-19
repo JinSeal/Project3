@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { FormField, Button, Heading, Combobox } from 'evergreen-ui';
 import styled from 'styled-components';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import _ from 'underscore';
+import { ALL_CATS_QUERY } from './DonationForm'
 
 const Styles = styled.div`
     background-color: white;
@@ -11,19 +12,22 @@ const Styles = styled.div`
 `;
 
 
-const ALL_CATS_QUERY = gql`
-  query ALL_CATS_QUERY{
-    allCats{
-      id
-      name
-      image
-      iucnStatus
-    }
-  }
+const CREATE_ADOPTION_MUTATION = gql`
+    mutation CREATE_ADOPTION_MUTATION(
+        $catId: Int!
+    ){ 
+        createAdoption(catId: $catId)
+            {
+                adoption{
+                    id
+                }
+            }
+      }
 `;
 
 class AdoptionForm extends Component {
     state = {
+        catId: null,
         name: '',
         image: "static/image/stripe.jpg"
     };
@@ -31,20 +35,6 @@ class AdoptionForm extends Component {
 
     saveToState = e => {
         this.setState({ [e.target.name]: e.target.value });
-    };
-
-    onToken = async (res, createOrder) => {
-        NProgress.start();
-        await createDonation({
-            variables: {
-                token: res.id,
-            },
-        }).catch(err => {
-            alert(err.message);
-        });
-        Router.push({
-            pathname: '/thankyou',
-        });
     };
 
     render() {
@@ -66,6 +56,7 @@ class AdoptionForm extends Component {
                                     onChange={selected => {
                                         this.setState({
                                             name: selected,
+                                            catId: _.where(data.allCats, { name: selected })[0].id,
                                             image: _.where(data.allCats, { name: selected })[0].image
                                         })
                                     }}
@@ -74,7 +65,16 @@ class AdoptionForm extends Component {
                                 <div style={{ height: '200px' }}>
                                     <img style={{ height: "100%", borderRadius: "50%", margin: '3rem' }} src={image} alt="cat photo" />
                                 </div>
-                                <Button height={50} marginTop={50} appearance="primary" intent="success" >Adopt</Button>
+                                <Mutation
+                                    mutation={CREATE_ADOPTION_MUTATION}
+                                    variables={{
+                                        catId: this.state.catId
+                                    }}
+                                >
+                                    {(createAdoption) => (
+                                        <Button onClick={createAdoption} height={50} marginTop={50} appearance="primary" intent="success" >Adopt</Button>
+                                    )}
+                                </Mutation>
                             </FormField>
                         </Styles >
                     )

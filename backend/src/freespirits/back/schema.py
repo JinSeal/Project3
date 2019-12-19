@@ -38,12 +38,16 @@ class UserType(DjangoObjectType):
 class Query(graphene.ObjectType):
     all_cats = graphene.List(CatType)
     all_photos = graphene.List(PhotoType)
+    all_items = graphene.List(ItemType)
     me = graphene.Field(UserType)
 
     cat = graphene.Field(CatType, id=graphene.Int(), name=graphene.String())
 
     def resolve_all_cats(self, info, **kwargs):
         return Cat.objects.all()
+
+    def resolve_all_items(self, info, **kwargs):
+        return Item.objects.all()
 
     def resolve_cat(self, info, **kwargs):
           id = kwargs.get('id')
@@ -92,13 +96,12 @@ class CreateAdoption(graphene.Mutation):
 
     class Arguments:
         cat_id = graphene.Int(required=True)
-        user_id = graphene.Int(required=True)
 
-    def mutate(self, info, cat_id, user_id):
-        print(repr(info))
+    def mutate(self, info, cat_id):
+        print(repr(info.context.user))
         adoption = Adoption(
             cat_id = Cat.objects.get(pk=cat_id),
-            user_id = get_user_model().objects.get(pk=user_id)
+            user_id = info.context.user
         )
         adoption.save()
         
