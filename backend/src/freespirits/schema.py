@@ -1,11 +1,6 @@
 import graphene
-
 import freespirits.back.schema
 import graphql_jwt
-
-
-
-
 
 
 class Query(freespirits.back.schema.Query, graphene.ObjectType):

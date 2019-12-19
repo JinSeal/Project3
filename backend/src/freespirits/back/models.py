@@ -86,7 +86,7 @@ class Donation(models.Model):
 
 class Adoption(models.Model): 
     cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE, db_constraint=False)
 
     def __str__(self):
         return "User: {user_id}, Cat: {cat_id}".format(user_id=self.user_id, cat_id=self.cat_id)
@@ -110,7 +110,7 @@ class Item(models.Model):
 class CartItem(models.Model): 
     quantity = models.IntegerField(default=1)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name = "Item")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE, db_constraint=False)
 
     def __str__(self):
         return "item_" + self.item_id
@@ -120,7 +120,7 @@ class CartItem(models.Model):
 class OrderItem(models.Model):
     quantity = models.IntegerField(default=1)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name = "Item")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE, db_constraint=False)
 
     def __str__(self):
         return "item_" + self.item_id
@@ -131,7 +131,7 @@ class Order(models.Model):
     total = models.IntegerField()
     datetime = models.DateTimeField(default=datetime.now, blank=True)
     charge = models.CharField(max_length=100)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE, db_constraint=False)
 
 
     def __str__(self):

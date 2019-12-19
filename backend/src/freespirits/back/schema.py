@@ -1,6 +1,6 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, logout, authenticate
 from freespirits.back.models import Cat, Photo, Article, Donation, Adoption, Item, CartItem, OrderItem, Order
 
 class CatType(DjangoObjectType):
@@ -86,8 +86,39 @@ class CreateUser(graphene.Mutation):
 
         return CreateUser(user=user)
 
+
+class CreateAdoption(graphene.Mutation):
+    adoption = graphene.Field(AdoptionType)
+
+    class Arguments:
+        cat_id = graphene.Int(required=True)
+        user_id = graphene.Int(required=True)
+
+    def mutate(self, info, cat_id, user_id):
+        print(repr(info))
+        adoption = Adoption(
+            cat_id = Cat.objects.get(pk=cat_id),
+            user_id = get_user_model().objects.get(pk=user_id)
+        )
+        adoption.save()
+        
+        return CreateAdoption(adoption = adoption)
+
+
+# class Login(graphene.Mutation):
+#     class Arguments:
+#         username = graphene.String(required=True)
+#         password = graphene.String(required=True)
+        
+#     def mutate(self, info, username, password):
+#         user = authenticate(username=username, password=password)
+#         return user
+
+
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
+    create_adoption = CreateAdoption.Field()
+    # login = Login.Field()
 
 
     

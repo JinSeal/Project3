@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import Signout from './Signout';
+import User from './User';
 
 import styled from 'styled-components';
 
@@ -56,18 +57,39 @@ const NavStyles = styled.ul`
 
 
 const Nav = (props) => (
-  <NavStyles>
-    <a onClick={() => props.openDrawer()}>Meet the Cats</a>
-    <Link href="/donation">
-      <a>Donation</a>
-    </Link>
-    <Link href="/adoption">
-      <a>Adoption</a>
-    </Link>
-    <Link href="/signup">
-      <a>Sign In</a>
-    </Link>
-  </NavStyles>
+  <User>
+    {({ data }) => {
+      const me = data ? data.me : null
+      console.log(me);
+
+      return (
+        <NavStyles>
+          <a onClick={() => props.openDrawer()}>Meet the Cats</a>
+          <Link href="/donation">
+            <a>Donation</a>
+          </Link>
+          {me && (
+            <>
+              <Link href="/adoption">
+                <a>Adoption</a>
+              </Link>
+              <Link href="/account">
+                <a>Account</a>
+              </Link>
+              <Signout />
+            </>
+          )}
+          {!me && (
+            <Link href="/signin">
+              <a>Sign In</a>
+            </Link>
+
+          )}
+        </NavStyles>
+      )
+    }}
+  </User>
 );
+
 
 export default Nav;

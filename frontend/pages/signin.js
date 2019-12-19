@@ -1,4 +1,4 @@
-import Signup from '../components/Signup';
+import Signin from '../components/Signin';
 import styled from 'styled-components';
 
 const Columns = styled.div`
@@ -8,12 +8,12 @@ const Columns = styled.div`
   min-height: 80vh;
 `;
 
-const SignupPage = props => (
+const SigninPage = props => (
   <Columns>
     <div />
-    <Signup />
+    <Signin />
     <div />
   </Columns>
 );
 
-export default SignupPage;
+export default SigninPage;

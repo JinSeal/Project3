@@ -16,7 +16,7 @@ const PleaseSignIn = props => (
       }
       return props.children;
     }}
-  </Query>
+  </Query >
 );
 
 export default PleaseSignIn;

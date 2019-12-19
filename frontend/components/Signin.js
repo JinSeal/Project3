@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
+import Link from 'next/link';
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($username: String!, $password: String!) {
@@ -63,6 +64,12 @@ class Signin extends Component {
               </label>
 
               <button type="submit">Sign In!</button>
+              <Link href="/signup">
+                <a>Signup</a>
+              </Link>
+              <Link href="/resetpwd">
+                <a>Reset Password</a>
+              </Link>
             </fieldset>
           </Form>
         )}

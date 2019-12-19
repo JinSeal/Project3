@@ -4,10 +4,39 @@ import PropTypes from 'prop-types';
 
 const CURRENT_USER_QUERY = gql`
   query {
-    me {
+    me{
       id
-      email
       username
+      isStaff
+      isSuperuser
+      adoptionSet{
+        catId{
+          name
+          image
+        }
+      }
+      cartitemSet{
+        quantity
+        itemId{
+          title
+          description
+          image
+          unit
+        }
+      }
+      orderitemSet{
+        quantity
+        itemId{
+          title
+          image
+          unit
+        }
+      }
+      orderSet{
+        total
+        datetime
+      }
+    
     }
   }
 `;
