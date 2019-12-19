@@ -1,7 +1,7 @@
 {
-  "name": "sick-fits-frontend",
+  "name": "free-spirits",
   "version": "1.0.0",
-  "description": "Sick Fits! An example React, GraphQL, Next and Apollo",
+  "description": "Free Spirits",
   "main": "index.js",
   "scripts": {
     "dev": "next -p 9999",
