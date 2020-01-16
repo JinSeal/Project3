@@ -1,10 +1,6 @@
-import Link from 'next/link';
-
-import Signout from './Signout';
-import User from './User';
-
-import styled from 'styled-components';
-
+import React from 'react'
+import Link from 'next/link'
+import styled from 'styled-components'
 
 const NavStyles = styled.ul`
   margin: 0;
@@ -29,7 +25,7 @@ const NavStyles = styled.ul`
     &:after {
       height: 2px;
       background: white;
-      content: '';
+      content: "";
       width: 0;
       position: absolute;
       transform: translateX(-50%);
@@ -53,43 +49,15 @@ const NavStyles = styled.ul`
     justify-content: center;
     font-size: 1.5rem;
   }
-`;
+`
 
+const Nav = props => (
+  <NavStyles>
+    <a onClick={() => props.openDrawer()}>Meet the Cats</a>
+    <Link href="/donation">
+      <a>Donation</a>
+    </Link>
+  </NavStyles>
+)
 
-const Nav = (props) => (
-  <User>
-    {({ data }) => {
-      const me = data ? data.me : null
-      console.log(me);
-
-      return (
-        <NavStyles>
-          <a onClick={() => props.openDrawer()}>Meet the Cats</a>
-          <Link href="/donation">
-            <a>Donation</a>
-          </Link>
-          {me && (
-            <>
-              <Link href="/adoption">
-                <a>Adoption</a>
-              </Link>
-              <Link href="/account">
-                <a>Account</a>
-              </Link>
-              <Signout />
-            </>
-          )}
-          {!me && (
-            <Link href="/signin">
-              <a>Sign In</a>
-            </Link>
-
-          )}
-        </NavStyles>
-      )
-    }}
-  </User>
-);
-
-
-export default Nav;
+export default Nav

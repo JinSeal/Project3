@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import styled, { ThemeProvider, injectGlobal } from 'styled-components';
-import Header from './Header';
-import Footer from './Footer';
-import Meta from './Meta';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import Header from "./Header";
+import Meta from "./Meta";
 
 const theme = {
-  red: '#FF0000',
-  black: '#393939',
-  grey: '#3A3A3A',
-  lightgrey: '#F2EFE9',
-  offWhite: '#EDEDED',
-  darkBlue: '#162231',
-  bs: '0 12px 24px 0 rgba(0, 0, 0, 0.09)',
+  red: "#FF0000",
+  black: "#393939",
+  grey: "#3A3A3A",
+  lightgrey: "#F2EFE9",
+  offWhite: "#EDEDED",
+  darkBlue: "#162231",
+  bs: "0 12px 24px 0 rgba(0, 0, 0, 0.09)"
 };
 
 const StyledPage = styled.div`
@@ -24,13 +25,13 @@ const Inner = styled.div`
   padding: 0;
 `;
 
-injectGlobal`
+const GlobalStyle = createGlobalStyle`
 
   @font-face {
     font-family: 'Averia Serif Libre';
     font-style: normal;
     font-weight: 700;
-    src: url('../static/averia-serif-libre-v9-latin-700.woff2') format('woff2'); 
+    src: url('../public/averia-serif-libre-v9-latin-700.woff2') format('woff2'); 
   }
   html {
     box-sizing: border-box;
@@ -55,6 +56,10 @@ injectGlobal`
 `;
 
 class Layout extends Component {
+  static propTypes = {
+    children: PropTypes.object
+  };
+
   render() {
     return (
       <ThemeProvider theme={theme}>
@@ -62,8 +67,8 @@ class Layout extends Component {
           <Meta />
           <Header />
           <Inner>{this.props.children}</Inner>
-          <Footer />
         </StyledPage>
+        <GlobalStyle />
       </ThemeProvider>
     );
   }

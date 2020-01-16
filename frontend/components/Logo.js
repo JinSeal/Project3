@@ -1,12 +1,11 @@
-
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const LogoStyles = styled.h1`
   font-size: 4rem;
   margin: 1rem 2rem;
   position: relative;
   z-index: 2;
-  background-image: url("../static/logo.png");
+  background-image: url("/logo.png");
   background-size: contain;
   background-repeat: no-repeat;
   a {
@@ -23,6 +22,6 @@ const LogoStyles = styled.h1`
       padding-left: 0;
     }
   }
-`;
+`
 
-export default LogoStyles;
+export default LogoStyles

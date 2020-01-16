@@ -1,4 +1,3 @@
-import Cat from '../components/SingleCat';
+import Cat from '../components/SingleCat'
 
-
-export default Cat;
+export default Cat

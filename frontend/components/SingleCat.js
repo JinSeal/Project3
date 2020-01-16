@@ -1,38 +1,31 @@
-import React, { Component } from 'react';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
-import styled from 'styled-components';
-import Link from 'next/link'
-
+import React, { Component } from 'react'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
+import styled from 'styled-components'
 
 const SINGLE_CAT_QUERY = gql`
-    query SINGLE_CATS_QUERY($name: String!){
-        cat(name: $name) {
-            id
-            name
-            description
-            habitat
-            iucnStatus
-            number
-            subspecies
-            lifeSpan
-            size
-            weight
-            diet
-            bg
-            bg2
-            photoSet {
-            id
-            url
-            }
-            articleSet {
-            id
-            title
-            content
-            }
-        }
+  query SINGLE_CATS_QUERY($name: String!) {
+    cat(name: $name) {
+      id
+      name
+      description
+      habitat
+      iucnStatus
+      number
+      subspecies
+      lifeSpan
+      size
+      weight
+      diet
+      bg
+      bg2
+      photoSet {
+        id
+        url
+      }
     }
-`;
+  }
+`
 
 const Style = styled.div`
     .gallary {
@@ -77,84 +70,81 @@ const Style = styled.div`
     }
     
   }
-`;
+`
 
 class Cat extends Component {
-    render() {
-        return (
-            <Query query={SINGLE_CAT_QUERY}
-                variables={{ name: this.props.query.name }}
-            >
-                {({ data, error, loading }) => {
-                    if (loading) return <p>Loading...</p>;
-                    if (error) return <p>Error: {error.message}</p>;
-                    const cat = data.cat
+  render () {
+    return (
+      <Query
+        query={SINGLE_CAT_QUERY}
+        variables={{ name: this.props.query.name }}
+      >
+        {({ data, error, loading }) => {
+          if (loading) return <p>Loading...</p>
+          if (error) return <p>Error: {error.message}</p>
+          const cat = data.cat
 
-                    return (
-                        <Style>
-                            <div className='gallary'>
-                                <img src={cat.bg} />
-                            </div >
+          return (
+            <Style>
+              <div className="gallary">
+                <img src={cat.bg} />
+              </div>
 
-                            <div className='fact'>
-                                <h1>{cat.name}</h1>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>IUCN RED LIST STATUS</td>
-                                            <td>{iucnDic[cat.iucnStatus]}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>LEFT IN THE WILD</td>
-                                            <td>{cat.number}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>RANGE</td>
-                                            <td>{cat.habitat}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>SUB-SPECIES</td>
-                                            <td>{cat.subspecies}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>LIFE SPAN</td>
-                                            <td>{cat.lifeSpan}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>SIZE</td>
-                                            <td>{cat.size}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>WEIGHT</td>
-                                            <td>{cat.weight}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>DIET</td>
-                                            <td>{cat.diet}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className='links'>
-                                <a>Adoption</a>
-                                <a>Donation</a>
-                            </div>
-                        </Style>
-                    )
-                }}
-            </Query>
-        );
-    }
+              <div className="fact">
+                <h1>{cat.name}</h1>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>IUCN RED LIST STATUS</td>
+                      <td>{iucnDic[cat.iucnStatus]}</td>
+                    </tr>
+                    <tr>
+                      <td>LEFT IN THE WILD</td>
+                      <td>{cat.number}</td>
+                    </tr>
+                    <tr>
+                      <td>RANGE</td>
+                      <td>{cat.habitat}</td>
+                    </tr>
+                    <tr>
+                      <td>SUB-SPECIES</td>
+                      <td>{cat.subspecies}</td>
+                    </tr>
+                    <tr>
+                      <td>LIFE SPAN</td>
+                      <td>{cat.lifeSpan}</td>
+                    </tr>
+                    <tr>
+                      <td>SIZE</td>
+                      <td>{cat.size}</td>
+                    </tr>
+                    <tr>
+                      <td>WEIGHT</td>
+                      <td>{cat.weight}</td>
+                    </tr>
+                    <tr>
+                      <td>DIET</td>
+                      <td>{cat.diet}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </Style>
+          )
+        }}
+      </Query>
+    )
+  }
 }
 
-export default Cat;
+export default Cat
 
 const iucnDic = {
-    "A_1": "Extinct",
-    "A_2": "Extinct in the wild",
-    "A_3": "Creitically endangered",
-    "A_4": "Endangered",
-    "A_5": "Vulnerable",
-    "A_6": "Near threatened",
-    "A_7": "Least concern"
+  A_1: 'Extinct',
+  A_2: 'Extinct in the wild',
+  A_3: 'Creitically endangered',
+  A_4: 'Endangered',
+  A_5: 'Vulnerable',
+  A_6: 'Near threatened',
+  A_7: 'Least concern'
 }
