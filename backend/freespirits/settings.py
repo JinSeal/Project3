@@ -129,23 +129,14 @@ STATIC_URL = '/static/'
 GRAPHENE = {
     'SCHEMA': 'freespirits.schema.schema',
     'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware'
     ],
 }
 
 
 AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-GRAPHQL_JWT = {
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=10),
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
-    'JWT_SECRET_KEY': "dkfbwkjemnn",
-    'JWT_ALLOW_ARGUMENT': True,
-}
 
 CORS_ALLOW_METHODS = [
     'DELETE',
