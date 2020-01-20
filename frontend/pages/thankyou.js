@@ -1,5 +1,5 @@
-import React from 'react'
+import React from "react";
 
-const ThankYou = props => <div>Thank you</div>
+const ThankYou = props => <div>Thank you for your gift to Free Spirits.</div>;
 
-export default ThankYou
+export default ThankYou;

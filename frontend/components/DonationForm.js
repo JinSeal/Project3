@@ -31,11 +31,29 @@ const ALL_CATS_QUERY = gql`
   }
 `;
 
+const CREATE_DONATION_MUTATION = gql`
+  mutation CREATE_DONATION_MUTATION(
+    $amount: Float!
+    $email: String!
+    $token: String!
+    $cat: Integer!
+  ) {
+    createDonation(
+      amount: $amount
+      email: $email
+      stripetoken: $token
+      cat: $cat
+    ) {
+      id
+    }
+  }
+`;
+
 class DonationForm extends Component {
   state = {
     email: "",
     updates: false,
-    gift: this.props.amount || null,
+    gift: this.props.amount || 20,
     allocation: ""
   };
 
@@ -43,19 +61,22 @@ class DonationForm extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  // onToken = async res => {
-  //   NProgress.start();
-  //   await createDonation({
-  //     variables: {
-  //       token: res.id
-  //     }
-  //   }).catch(err => {
-  //     alert(err.message);
-  //   });
-  //   Router.push({
-  //     pathname: "/thankyou"
-  //   });
-  // };
+  onToken = async (res, createDonation) => {
+    NProgress.start();
+    const donation = await createOrder({
+      variables: {
+        amount: this.state.gift,
+        token: res.id,
+        email: this.state.email,
+        cat: this.state.cat
+      }
+    }).catch(err => {
+      alert(err.message);
+    });
+    Router.push({
+      pathname: "/thankyou"
+    });
+  };
 
   render() {
     return (
@@ -66,7 +87,7 @@ class DonationForm extends Component {
           let image = cat ? cat.image : "/image/stripe.jpg";
           return (
             <Styles>
-              <FormField>
+              <FormField label="">
                 <Heading size={500} marginTop="default">
                   Gift Amount *
                 </Heading>
@@ -74,7 +95,7 @@ class DonationForm extends Component {
                   height={50}
                   items={[25.0, 50.0, 100.0, 200.0, 500.0]}
                   onChange={changedItem => this.setState({ gift: changedItem })}
-                  initialInputValue={this.state.gift}
+                  initialInputValue={this.state.gift.toString()}
                 >
                   {props => {
                     const {
@@ -120,25 +141,27 @@ class DonationForm extends Component {
                     Keep me updated on Free Spirits news
                   </Heading>
                 </div>
-                <StripeCheckout
-                  amount={this.state.gift * 100}
-                  name="Free Spirits"
-                  description={`Donate to save wild cats`}
-                  image={image}
-                  stripeKey="pk_test_KiZyYKiQtlmrqhtoGEbkdtuR00es4lCEgx"
-                  currency="AUD"
-                  // token={res => this.onToken(res)}
-                  bitcoin={true}
-                >
-                  <Button
-                    height={50}
-                    marginTop={30}
-                    appearance="primary"
-                    intent="success"
+                {createDonation => (
+                  <StripeCheckout
+                    amount={this.state.gift * 100}
+                    name="Free Spirits"
+                    description={`Donate to save wild cats`}
+                    image={image}
+                    stripeKey="pk_test_KiZyYKiQtlmrqhtoGEbkdtuR00es4lCEgx"
+                    currency="AUD"
+                    token={res => this.onToken(res)}
+                    bitcoin={true}
                   >
-                    Complete this Transaction
-                  </Button>
-                </StripeCheckout>
+                    <Button
+                      height={50}
+                      marginTop={30}
+                      appearance="primary"
+                      intent="success"
+                    >
+                      Complete this Transaction
+                    </Button>
+                  </StripeCheckout>
+                )}
               </FormField>
             </Styles>
           );

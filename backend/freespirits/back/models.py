@@ -49,7 +49,7 @@ class Cat(models.Model):
 class Photo(models.Model):
     title = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
-    cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat")
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat", null=True)
    
 
     def __str__(self):
@@ -64,10 +64,10 @@ class Donation(models.Model):
     date = models.DateField(default=date.today, blank=True)
     email = models.EmailField()
     stripetoken = models.TextField()
-    cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat")
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE, verbose_name = "Cat", null=True)
 
     def __str__(self):
-        return self.email+ " " + self.amount
+        return self.email
 
     class Meta:
         ordering = ['-date','email']
