@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Router from "next/router";
 import gql from "graphql-tag";
 import {
   FormField,
@@ -12,7 +13,7 @@ import {
 } from "evergreen-ui";
 import styled from "styled-components";
 import StripeCheckout from "react-stripe-checkout";
-import { Query } from "react-apollo";
+import { Query, Mutation } from "react-apollo";
 import _ from "underscore";
 
 const Styles = styled.div`
@@ -35,16 +36,21 @@ const CREATE_DONATION_MUTATION = gql`
   mutation CREATE_DONATION_MUTATION(
     $amount: Float!
     $email: String!
-    $token: String!
-    $cat: Integer!
+    $stripetoken: String!
+    $cat: String!
   ) {
     createDonation(
-      amount: $amount
-      email: $email
-      stripetoken: $token
-      cat: $cat
+      input: {
+        amount: $amount
+        email: $email
+        stripetoken: $stripetoken
+        cat: $cat
+      }
     ) {
-      id
+      ok
+      donation {
+        id
+      }
     }
   }
 `;
@@ -62,13 +68,12 @@ class DonationForm extends Component {
   };
 
   onToken = async (res, createDonation) => {
-    NProgress.start();
-    const donation = await createOrder({
+    const donation = await createDonation({
       variables: {
-        amount: this.state.gift,
-        token: res.id,
+        amount: Number(this.state.gift),
+        stripetoken: res.id,
         email: this.state.email,
-        cat: this.state.cat
+        cat: this.state.allocation
       }
     }).catch(err => {
       alert(err.message);
@@ -89,8 +94,19 @@ class DonationForm extends Component {
             <Styles>
               <FormField label="">
                 <Heading size={500} marginTop="default">
+                  Email
+                </Heading>
+                <TextInput
+                  placeholder="Enter your email"
+                  width={400}
+                  value={this.state.email}
+                  label="email"
+                  onChange={e => this.setState({ email: e.target.value })}
+                />
+                <Heading size={500} marginTop="default">
                   Gift Amount *
                 </Heading>
+
                 <Autocomplete
                   height={50}
                   items={[25.0, 50.0, 100.0, 200.0, 500.0]}
@@ -141,27 +157,30 @@ class DonationForm extends Component {
                     Keep me updated on Free Spirits news
                   </Heading>
                 </div>
-                {createDonation => (
-                  <StripeCheckout
-                    amount={this.state.gift * 100}
-                    name="Free Spirits"
-                    description={`Donate to save wild cats`}
-                    image={image}
-                    stripeKey="pk_test_KiZyYKiQtlmrqhtoGEbkdtuR00es4lCEgx"
-                    currency="AUD"
-                    token={res => this.onToken(res)}
-                    bitcoin={true}
-                  >
-                    <Button
-                      height={50}
-                      marginTop={30}
-                      appearance="primary"
-                      intent="success"
+                <Mutation mutation={CREATE_DONATION_MUTATION}>
+                  {createDonation => (
+                    <StripeCheckout
+                      amount={this.state.gift * 100}
+                      email={this.state.email}
+                      name="Free Spirits"
+                      description={`Donate to save wild cats`}
+                      image={image}
+                      stripeKey="pk_test_KiZyYKiQtlmrqhtoGEbkdtuR00es4lCEgx"
+                      currency="AUD"
+                      token={res => this.onToken(res, createDonation)}
+                      bitcoin={true}
                     >
-                      Complete this Transaction
-                    </Button>
-                  </StripeCheckout>
-                )}
+                      <Button
+                        height={50}
+                        marginTop={30}
+                        appearance="primary"
+                        intent="success"
+                      >
+                        Complete this Transaction
+                      </Button>
+                    </StripeCheckout>
+                  )}
+                </Mutation>
               </FormField>
             </Styles>
           );

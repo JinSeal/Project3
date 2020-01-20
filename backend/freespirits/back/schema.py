@@ -38,7 +38,7 @@ class DonationInput(graphene.InputObjectType):
     amount = graphene.Float()
     email = graphene.String()
     stripetoken = graphene.String()
-    cat = graphene.Int()
+    cat = graphene.String()
 
 class CreateDonation(graphene.Mutation):
     class Arguments:
@@ -51,7 +51,7 @@ class CreateDonation(graphene.Mutation):
     def mutate(root, info, input=None):
         ok = True
         date = datetime.now()
-        cat = Cat.objects.get(id=input.cat)
+        cat = Cat.objects.get(name=input.cat)
         donation = Donation(amount=input.amount, email=input.email, stripetoken=input.stripetoken, cat=cat, date=date)
         donation.save()
         return CreateDonation(ok=ok, donation=donation)
