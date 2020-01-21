@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var endpoint = \"http://localhost:8000/graphql\";\nexport var prodEndpoint = \"https://localhost:8000/graphql\";","map":null,"metadata":{},"sourceType":"module"}

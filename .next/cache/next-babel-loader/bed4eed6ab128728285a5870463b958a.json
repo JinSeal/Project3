@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const endpoint = 'http://localhost:8000/graphql';","map":null,"metadata":{},"sourceType":"module"}

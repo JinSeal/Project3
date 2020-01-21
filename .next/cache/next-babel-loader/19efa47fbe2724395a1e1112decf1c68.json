@@ -1,0 +1,1 @@
+{"ast":null,"code":"import Cat from '../components/SingleCat';\nexport default Cat;","map":{"version":3,"sources":["/Users/jinz/Projects/project3/frontend/pages/cat.js"],"names":["Cat"],"mappings":"AAAA,OAAOA,GAAP,MAAgB,yBAAhB;AAEA,eAAeA,GAAf","sourcesContent":["import Cat from '../components/SingleCat'\n\nexport default Cat\n"]},"metadata":{},"sourceType":"module"}

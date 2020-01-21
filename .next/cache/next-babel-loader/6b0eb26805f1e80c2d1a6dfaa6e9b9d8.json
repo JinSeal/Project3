@@ -1,0 +1,1 @@
+{"ast":null,"code":"import Account from '../components/Account';\nexport default Account;","map":null,"metadata":{},"sourceType":"module"}
