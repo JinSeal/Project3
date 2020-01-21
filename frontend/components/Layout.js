@@ -28,10 +28,8 @@ const Inner = styled.div`
 const GlobalStyle = createGlobalStyle`
 
   @font-face {
-    font-family: 'Averia Serif Libre';
     font-style: normal;
     font-weight: 700;
-    src: url('../public/averia-serif-libre-v9-latin-700.woff2') format('woff2'); 
   }
   html {
     box-sizing: border-box;
@@ -45,14 +43,12 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-size: 1.5rem;
     line-height: 2;
-    font-family: 'Averia Serif Libre';
     background-color: ${props => props.theme.darkBlue};
   }
   a {
     text-decoration: none;
     color: ${theme.black};
   }
-  button {  font-family: 'Averia Serif Libre'; }
 `;
 
 class Layout extends Component {

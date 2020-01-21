@@ -1,9 +1,10 @@
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth import get_user_model, login, logout, authenticate
+from datetime import datetime
 import graphene
+from graphene_django.types import DjangoObjectType
 from graphql.error import GraphQLError
 import stripe
-from graphene_django.types import DjangoObjectType
-from datetime import datetime
-from django.contrib.auth import get_user_model, login, logout, authenticate
 from freespirits.back.models import Cat, Photo, Donation
 
 class CatType(DjangoObjectType):
@@ -34,8 +35,6 @@ class Query(graphene.ObjectType):
           return None
 
 
-
-    
 class DonationInput(graphene.InputObjectType):
     amount = graphene.Int()
     email = graphene.String()
@@ -58,11 +57,24 @@ class CreateDonation(graphene.Mutation):
                 currency="AUD",
                 source=input.stripetoken
             )
+
             ok = True
             date = datetime.now()
             cat = Cat.objects.get(name=input.cat)
             donation = Donation(amount=input.amount, email=input.email, stripetoken=input.stripetoken, cat=cat, date=date)
             donation.save()
+
+
+            subject = 'Thank your for your gift to Free Spirits'
+            from_email = "admin@freespirits.com"
+            to = input.email
+            text_content = "Your donation of " + str(input.amount) + " dollors may be tax deductible."
+            html_content = '<h1><strong>Thank You</strong> for this donation</h1><p>Your donation of ' + str(input.amount) +  ' dollors may be tax deductible.</p>'
+
+            message = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            message.attach_alternative(html_content, "text/html")
+            message.send()
+
             return CreateDonation(ok=ok, donation=donation)
 
         except stripe.error.CardError as e:
@@ -97,4 +109,5 @@ class CreateDonation(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     create_donation = CreateDonation.Field()
+
 

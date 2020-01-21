@@ -160,3 +160,9 @@ STRIPE_LIVE_MODE = False
 
 import django_heroku
 django_heroku.settings(locals())
+
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'b408283342e1ba'
+EMAIL_HOST_PASSWORD = '27610c02e316ff'
+EMAIL_PORT = '2525'

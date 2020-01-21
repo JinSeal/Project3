@@ -146,7 +146,7 @@ class DonationForm extends Component {
                   name="allocation"
                   openOnFocus
                   width={400}
-                  items={[...catsName, "All Cats"]}
+                  items={[...catsName]}
                   onChange={selected => this.setState({ allocation: selected })}
                   placeholder="Select a Cat"
                 />
@@ -171,7 +171,6 @@ class DonationForm extends Component {
                       stripeKey="pk_test_KiZyYKiQtlmrqhtoGEbkdtuR00es4lCEgx"
                       currency="AUD"
                       token={res => this.onToken(res, createDonation)}
-                      bitcoin={true}
                     >
                       <Button
                         height={50}
