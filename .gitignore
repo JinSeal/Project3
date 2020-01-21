@@ -1,6 +1,6 @@
 .env/
-frontend/.next/
-frontend/node_modules/
+.next/
+node_modules/
 .vscode/
 .DS_Store
 *.pyc

@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const endpoint = `http://localhost:8000/graphql`;","map":{"version":3,"sources":["/Users/jinz/Projects/project3/frontend/config.js"],"names":["endpoint"],"mappings":"AAAA,OAAO,MAAMA,QAAQ,GAAI,+BAAlB","sourcesContent":["export const endpoint = `http://localhost:8000/graphql`;\n"]},"metadata":{},"sourceType":"module"}

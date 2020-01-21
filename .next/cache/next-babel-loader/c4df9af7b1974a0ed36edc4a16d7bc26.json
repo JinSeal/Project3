@@ -1,0 +1,1 @@
+{"ast":null,"code":"import Cat from '../components/SingleCat';\nexport default Cat;","map":null,"metadata":{},"sourceType":"module"}
