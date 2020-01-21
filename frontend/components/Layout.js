@@ -63,12 +63,12 @@ class Layout extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <StyledPage>
           <Meta />
           <Header />
           <Inner>{this.props.children}</Inner>
         </StyledPage>
-        <GlobalStyle />
       </ThemeProvider>
     );
   }

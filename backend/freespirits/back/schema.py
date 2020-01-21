@@ -1,4 +1,6 @@
 import graphene
+from graphql.error import GraphQLError
+import stripe
 from graphene_django.types import DjangoObjectType
 from datetime import datetime
 from django.contrib.auth import get_user_model, login, logout, authenticate
@@ -35,7 +37,7 @@ class Query(graphene.ObjectType):
 
     
 class DonationInput(graphene.InputObjectType):
-    amount = graphene.Float()
+    amount = graphene.Int()
     email = graphene.String()
     stripetoken = graphene.String()
     cat = graphene.String()
@@ -49,12 +51,49 @@ class CreateDonation(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, input=None):
-        ok = True
-        date = datetime.now()
-        cat = Cat.objects.get(name=input.cat)
-        donation = Donation(amount=input.amount, email=input.email, stripetoken=input.stripetoken, cat=cat, date=date)
-        donation.save()
-        return CreateDonation(ok=ok, donation=donation)
+        stripe.api_key = "sk_test_NyaCo4VX3cDyY5TBu9WA2ZhW00SAssAE9N"
+        try:
+            charge = stripe.Charge.create(
+                amount=input.amount*100,  
+                currency="AUD",
+                source=input.stripetoken
+            )
+            ok = True
+            date = datetime.now()
+            cat = Cat.objects.get(name=input.cat)
+            donation = Donation(amount=input.amount, email=input.email, stripetoken=input.stripetoken, cat=cat, date=date)
+            donation.save()
+            return CreateDonation(ok=ok, donation=donation)
+
+        except stripe.error.CardError as e:
+            body = e.json_body
+            err = body.get("error", {})
+            raise GraphQLError(err.get('message'))
+            
+
+        except stripe.error.RateLimitError as e:
+            raise GraphQLError("Rate limit error")
+            
+
+        except stripe.error.InvalidRequestError as e:
+            # Invalid parameters were supplied to Stripe's API
+            raise GraphQLError("Invalid parameters")
+            
+
+        except stripe.error.AuthenticationError as e:
+            # Authentication with Stripe's API failed
+            # (maybe you changed API keys recently)
+            raise GraphQLError("Not authenticated")
+
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            raise GraphQLError("Network error")
+
+        except stripe.error.StripeError as e:
+            # Display a very generic error to the user, and maybe send
+            # yourself an email
+            raise GraphQLError("Something went wrong. You were not charged. Please try again.")
+
 
 class Mutation(graphene.ObjectType):
     create_donation = CreateDonation.Field()

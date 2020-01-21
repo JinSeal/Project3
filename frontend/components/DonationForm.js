@@ -34,7 +34,7 @@ const ALL_CATS_QUERY = gql`
 
 const CREATE_DONATION_MUTATION = gql`
   mutation CREATE_DONATION_MUTATION(
-    $amount: Float!
+    $amount: Int!
     $email: String!
     $stripetoken: String!
     $cat: String!
@@ -72,15 +72,18 @@ class DonationForm extends Component {
       variables: {
         amount: Number(this.state.gift),
         stripetoken: res.id,
-        email: this.state.email,
+        email: res.email,
         cat: this.state.allocation
       }
-    }).catch(err => {
-      alert(err.message);
-    });
-    Router.push({
-      pathname: "/thankyou"
-    });
+    })
+      .then(res => {
+        Router.push({
+          pathname: "/thankyou"
+        });
+      })
+      .catch(err => {
+        alert(err.message);
+      });
   };
 
   render() {
